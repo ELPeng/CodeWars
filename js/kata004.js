@@ -1,29 +1,45 @@
-//============ [5kyu] Best travel ==============//
+//============ [5kyu] Pete, the baker ==============//
 //My Answer
+function cakes(recipe, available) {
+    let count = 0
+    const checkIng = function(){
+        let ingArr = []
+        for(const ing in recipe){
+            ingArr.push(ing in available)
+        }
+        return ingArr.reduce((result, val) => result && val, 1)
+    }
 
-function chooseBestSum(t, k, ls) {
-    const tripArr = []
-    let tempTrip = {}
-    class Trip{
-        constructor(directions, distance){
-            this.directions = directions
-            this.distance = distance
+    const checkNum = function(){
+        let numArr = []
+        for(const ing in recipe){
+            numArr.push(recipe[ing] <= available[ing])
+        }
+        return numArr.reduce((result, val) => result && val, 1)
+    }
+
+    const subIng = function(){
+        for(const ing in recipe){
+            available[ing] -= recipe[ing]
         }
     }
-    // let trip = {
-    //     directions: [],
-    //     totalDistance: 0
-    // }
-    for(let i = 0; i < ls.length-2; i++){
-      for(let j = i+1; j<ls.length - 1; j++){
-        for (let k = j+1; k < ls.length; k++){
-           tempTrip = new Trip([],0)
-           tempTrip.directions = [ls[i], ls[j], ls[k]]
-           tempTrip.distance = tempTrip.directions.reduce((total, curr) => total+curr , 0)
-           tripArr.push(tempTrip)
-        }
-      }
+
+    while(checkIng() && checkNum()){
+        count++
+        subIng()
+        if(count == 1000)
+            break
     }
-    console.log(tripArr)
-}
-chooseBestSum(120, 4, [1, 2, 3, 4, 5])
+    return count
+  }
+
+  console.log(cakes(recipe = {flour: 500, sugar: 200, eggs: 1},
+    available = {flour: 1200, sugar: 1200, eggs: 5, milk: 200}))
+
+
+//Optimal Solution
+function cakes(recipe, available) {
+    return Object.keys(recipe).reduce(function(val, ingredient) {
+      return Math.min(Math.floor(available[ingredient] / recipe[ingredient] || 0), val)
+    }, Infinity)  
+  }
