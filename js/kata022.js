@@ -11,3 +11,8 @@ function songDecoder(song){
 }
 
   console.log(songDecoder("AWUBBWUBC"))
+
+  //BestSolution
+  function songDecoder(song){
+    return song.replace(/(WUB)+/g," ").trim()
+  }
